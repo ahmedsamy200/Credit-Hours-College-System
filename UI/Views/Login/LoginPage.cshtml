@@ -1,0 +1,190 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LoginPage</title>
+    <link rel="icon" type="image/x-icon" href="~/Images/clinic2-512.png" />
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap-grid.css" rel="stylesheet" />
+    <link href="~/StyleSheets/LoginPage.css" rel="stylesheet" />
+   
+    <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+    <script src="~/Scripts/jquery-3.5.0.js"></script>
+    <script src="~/Scripts/bootstrap.js"></script>
+
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/notify.min.js"></script>
+    
+</head>
+<body >
+    <div class="container">
+
+    </div>
+    <div class="form" style="position: sticky;margin-top: 93px;">
+        <div class="thumbnail"><img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/169963/hat.svg" /></div>
+        <div class="register-form animate">
+            <input type="text" id="txtFName" placeholder="First Name" autocomplete="off"/>
+            <input type="text" id="txtMidName" placeholder="Mid Name" autocomplete="off" />
+            <input type="text" id="txtLastName" placeholder="Last Name" autocomplete="off" />
+            <input type="text" id="NatID" placeholder="National ID" autocomplete="off"/>
+            <input type="text" id="txtPhone" placeholder="Phone Number" autocomplete="off" />
+            <select id="ddlGender"></select>
+            <select id="ddlDepartment"></select>
+            <select  id="ddlLevel"></select>
+            <button id="btnRegister">create</button>
+            <p class="message">Already registered? <a>Sign In</a></p>
+        </div>
+        <div class="login-form animate">
+            <input type="text" id="txtNatID" placeholder="National ID" autocomplete="off"/>
+            <input type="password" id="txtPassword" placeholder="password" autocomplete="off"/>
+            <button id="btnLogin">login</button>
+            <p class="message">Not registered? <a >Create an account</a></p>
+        </div>
+        </div>
+</body>
+</html>
+
+<script>
+    $(document).ready(function () {
+        loadDepatments();
+        loadLevels();
+        loadGenders();
+        
+        $('.message a').click(function () {
+            $('.animate').animate({ height: "toggle", opacity: "toggle" }, "slow");
+        });
+
+        $('#btnLogin').click(function () {
+            var NatID = $('#txtNatID').val();
+            var pass = $('#txtPassword').val();
+            $.ajax({
+                url: "/Login/CheckForStudent?nationalID=" + NatID +
+                "&password=" + pass,
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    if (result == "Success") {
+
+                        $.notify("Logged in Successfully!", "success");
+                        //window.location = "//localhost:7588/Home/Index";
+                        window.location = "//localhost:7588/Student/My_Account";
+                    }
+                    else{
+
+                        $.notify("Invalid username or password", "error");
+
+                    }
+
+                }
+            });
+        })
+
+        $('#btnRegister').click(function () {
+            var fName = $('#txtFName').val();
+            var midName = $('#txtMidName').val();
+            var lastName = $('#txtLastName').val();
+            var NatID = $('#NatID').val();
+            var phone = $('#txtPhone').val();
+            var gender = $('#ddlGender').val();
+            var dpt = $('#ddlDepartment').val();
+            var lvl = $('#ddlLevel').val();
+
+            $.ajax({
+                url: "/Login/AddNewStudent?firstName=" + fName +
+                "&midName=" + midName +
+                "&lastName=" + lastName +
+                "&nationalID=" + NatID +
+                "&mobile=" + phone +
+                "&password=" + NatID +
+                "&genderID=" + gender +
+                "&deptId=" + dpt +
+                "&levelID=" + lvl,
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    if (result == "Success") {
+                        Clear();
+                        $.notify("New user has been added Successfully!", "success");
+
+                    }
+                    else {
+                        $.notify("Invalid National ID ", "error");
+
+                    }
+                }
+            });
+        })
+
+    })
+    function loadDepatments() {
+        $.ajax({
+            url: "/Login/LoadDepartments",
+            type: "GET",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                var html = '<option  value=-1 >Select your Department</option>';
+                $.each(result, function (key, item) {
+                    html += '<option value=' + item.dptID + ' >';
+                    html += item.dptName;
+                    html += '</option>';
+                });
+                $('#ddlDepartment').html(html);
+            }
+        });
+    }
+    function loadLevels() {
+        $.ajax({
+            url: "/Login/LoadLevels",
+            type: "GET",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                var html = '<option  value=-1 >Select your Level</option>';
+                $.each(result, function (key, item) {
+                    html += '<option value=' + item.lvlID + ' >';
+                    html += item.lvlName;
+                    html += '</option>';
+                });
+                $('#ddlLevel').html(html);
+            }
+        });
+    }
+    function loadGenders() {
+        $.ajax({
+            url: "/Login/LoadGender",
+            type: "GET",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                var html = '<option  value=-1 >Select your Gender</option>';
+                $.each(result, function (key, item) {
+                    html += '<option value=' + item.genderID + ' >';
+                    html += item.genderName;
+                    html += '</option>';
+                });
+                $('#ddlGender').html(html);
+            }
+        });
+    }
+    function Clear() {
+         $('#txtFName').val('');
+         $('#txtMidName').val('');
+         $('#txtLastName').val('');
+         $('#NatID').val('');
+         $('#txtPhone').val('');
+         $('#ddlGender').val(-1);
+         $('#ddlDepartment').val(-1);
+         $('#ddlLevel').val(-1);
+
+    }
+</script>

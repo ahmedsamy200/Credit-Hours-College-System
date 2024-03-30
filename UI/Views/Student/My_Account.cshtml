@@ -1,0 +1,451 @@
+﻿
+@{
+    ViewBag.Title = "My_Account";
+    Layout = "~/Views/Shared/_StudentLayout.cshtml";
+}
+<style>
+    table th {
+        text-align: center
+    }
+</style>
+
+<div class="All-Subjects">
+    <h2 style="margin-bottom:30px;font-family:sans-serif">Subjects</h2>
+
+    <div>
+        <div class="hdnStdID">
+            <input type="hidden" id="hdnID" />
+        </div>
+
+        @* alerts *@
+        <div class="alert alert-success" id="alert_SubjectSaved">
+            <strong></strong>
+        </div>
+
+        <div class="alert alert-info" id="alert_SubjectInfo">
+            <strong>You Cant Select This Subject!</strong> You Selceted a Subject in same time.
+        </div>
+
+        <div class="alert alert-danger" id="alert_SubjectError">
+            <span style="font-family: cursive;">You Cant Select more than 18 Hours.</span>
+        </div>
+
+        @* Subjects List *@
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Subject List</h4>
+            </div>
+            <div class="card-body">
+                <div id="FirstTable">
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th style="padding-left: 28px;">#</th>
+                                <th>Subject Name</th>
+                                <th>Code</th>
+                                <th>Doctor Name</th>
+                                <th style="width:10px">PreSubject</th>
+                                <th>creditHours</th>
+                                <th>Day</th>
+                                <th>From</th>
+                                <th>To</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tblSubjects"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        @* Slected Table *@
+        <div class="card" id="sec_Card">
+            <div class="card-body">
+                <h4 class="card-title">Selected Subject</h4>
+            </div>
+            <div class="card-body">
+                <div id="SecTable">
+                    <table class="table table-bordered table-hover  secTbl">
+                        <thead>
+                            <tr>
+                                <th style="padding-left: 28px;">#</th>
+                                <th>Subject Name</th>
+                                <th>Code</th>
+                                <th>Doctor Name</th>
+                                <th style="width:10px">PreSubject</th>
+                                <th>creditHours</th>
+                                <th>Day</th>
+                                <th>From</th>
+                                <th>To</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tblSlectedSubjects"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div style="margin-top: 35px;text-align:center;margin-bottom:70px" id="thd-Section">
+
+            <button class="btn btn-success" id="btnSave" disabled>Save</button>
+            <button class="btn btn-danger" id="btnClear" style=margin-left: 35px;">Clear All</button>
+
+            <div class="progress" style="margin-top:35px">
+                <svg class="progress-circle" width="200px" height="200px" xmlns="http://www.w3.org/2000/svg">
+                    <circle class="progress-circle-back"
+                            cx="80" cy="80" r="74"></circle>
+                    <circle class="progress-circle-prog"
+                            cx="80" cy="80" r="74"></circle>
+                </svg>
+                <div class="progress-text" data-progress="0"></div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        GetData();
+        LoadSubjects();
+      
+        $('.progress').hide();
+        $('#btnClear').click(function () {
+
+            $("#btnSave").attr("disabled", "disabled");
+            progressBar(0, 18);
+            $('#tblSlectedSubjects tr').remove();
+            $.ajax({
+                url: "/Student/GetUserData",
+                type: "GET",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    LoadSubjects();
+
+                }
+            });
+        })
+        $('#btnSave').click(function () {
+            var stdID = $('#hdnID').val();
+
+            //$('#tblSlectedSubjects tr').remove();
+
+            //Loop through the Table rows and build a JSON array.
+            var Subjects = new Array();
+
+            $("#tblSlectedSubjects tr").each(function () {
+                var row = $(this);
+                var sub = {};
+                sub.studentID = stdID;
+                sub.subjectID = row.find("TD").eq(9).html();
+                sub.isPassed = false;
+                Subjects.push(sub);
+
+                console.log(Subjects);
+
+
+
+            });
+
+            //Send the JSON array to Controller using AJAX.
+            $.ajax({
+                type: "POST",
+                url: "/Student/SaveSubjects",
+                data: JSON.stringify(Subjects),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (r) {
+                    //alert(r + " Subjects(s) Saved.");
+                    $('#alert_SubjectSaved').show();
+                    $('#alert_SubjectSaved strong').text(r + " Subjects(s) Saved Successfully.");
+                    $('#alert_SubjectSaved').delay(5000).fadeOut('slow');
+                    $("#btnSave").attr("disabled", "disabled");
+                    $('#tblSlectedSubjects tr').remove();
+                    progressBar(0, 18);
+                }
+            });
+        })
+    })
+
+    function GetData() {
+        $.ajax({
+            url: "/Student/GetUserData",
+            type: "GET",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                var defultImg = "default4.png";
+                $.each(result, function (key, item) {
+                    //alert(result.deptName);
+                    $('#FName').text(result.firstName);
+                    $('#department').text(result.deptName);
+                    if (result.image == null) {
+                        $('#img').val(defultImg);
+                        $('.UserImage').attr("src", '/Images/' + defultImg);
+                    } else {
+                        $('#img').val(result.Image);
+                        $('.UserImage').attr("src", '/Images/' + result.image);
+                    }
+                    $('#txtName').val(result.firstName);
+                    $('#txtLastName').val(result.lastName);
+                    $('#txtGender').val(result.genderID);
+                    $('#txtPhone').val(result.mobile);
+                    $('#txtEmail').val(result.nationalID);
+                    $('#txtPassword').val(result.password);
+
+                    $('#txtCity').val(result.deptId);
+                    $('#txtCity').val(result.levelName);
+                    $('#hdnID').val(result.studentID);
+                });
+            },
+            complete: function () {
+                $('.loading').hide();
+            }
+        });
+    }
+    function LoadSubjects() {
+        $.ajax({
+            url: "/Student/GetDptSubjects",
+            type: "GET",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                var html = '';
+                var i = 0;
+                $.each(result, function (key, item) {
+                    html += '<tr id="x' + item.id + '">';
+                    i++;
+                    html += '<td style="padding-left: 27px;font-weight: 500;font-style:italic;">' + i + '</td>';
+                    html += '<td style="font-weight: 500;font-style:italic;">' + item.subjectName + '</td>';
+                    html += '<td style="color:#0094ff"><a href="#" style="text-decoration:none;text-align: center;font-weight: 500;font-style:italic;">' + item.code + '</a></td>';
+                    html += '<td style="font-weight: 500;font-style:italic;text-align: center;">' + item.professorName + '</td>';
+                    if (item.preSubject == null)
+                        html += '<td style="font-weight: 800;font-style:italic;text-align: center;">' + " - " + '</td>';
+                    else
+                        html += '<td style="font-weight: 500;font-style:italic;text-align: center;">' + item.preSubjectName + '</td>';
+                    html += '<td style="font-weight: 500;font-style:italic;text-align: center;">' + item.creditHours + '</td>';
+                    html += '<td style="font-weight: 500;font-style:italic;text-align: center;">' + item.day + '</td>';
+                    html += '<td style="font-weight: 500;font-style:italic;text-align: center;">' + item.timeFrom + '</td>';
+                    html += '<td style="font-weight: 500;font-style:italic;text-align: center;">' + item.timeTo + '</td>';
+                    html += '<td style="display:none;font-weight: 500;font-style:italic;text-align: center;">' + item.subjectID + '</td>';
+                    html += '<td style="text-align: center;" ><a href="javascript:void(0);" onclick=select(' + item.id + '); return false;>' +
+                        '<i class="fas fa-check" style="font-size: 20px;color: blue;"></i></a></td>';
+                    html += '</tr>';
+                });
+
+                $('#tblSubjects').html(html);
+            }
+        });
+    }
+    function select(id) {
+        $('.progress').show();
+        var stdID = $('#hdnID').val();
+        var x = $('#tblSlectedSubjects tr');
+        var valid = true;
+        //get the first tbl row data
+        var row = $('#tblSubjects');
+        var subID = row.find('#x' + id + ' TD').eq(9).html();
+        var Day = row.find('#x' + id + ' TD').eq(6).html();
+        var TimeFrom = row.find('#x' + id + ' TD').eq(7).html();
+        var TimeTo = row.find('#x' + id + ' TD').eq(8).html();
+
+        //Loop through the selected Table rows .
+        $("#tblSlectedSubjects tr").each(function () {
+            var row = $(this);
+            var SecsubID = row.find('TD').eq(9).html();
+            var SecDay = row.find('TD').eq(6).html();
+            var SecTimeFrom = row.find('TD').eq(7).html();
+            var SecTimeTo = row.find('TD').eq(8).html();
+            if (SecDay == Day) {
+                if (SecTimeFrom == TimeFrom && SecTimeTo == TimeTo) {
+                    valid = false;
+                }
+            }
+        })
+        if (valid == true) {
+            $.ajax({
+                url: "/Student/CountHours?StdID=" + stdID +
+                "&subID=" + subID +
+                "&day=" + Day +
+                "&timeFrom=" + TimeFrom +
+                "&id=" + id +
+                "&timeTo=" + TimeTo,
+                type: "GET",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    $.each(result, function (key, item) {
+                        if (result.canChoise == true) {
+                            $('#sec_Card').show();
+                            $('#thd-Section').show();
+                            if (result.creditHours < 12 || result.creditHours > 18) {
+                                $("#btnSave").attr("disabled", "disabled");
+                                $('.progress-circle-prog').css("stroke", "red");
+                            }
+                            else if (result.creditHours > 12 && result.creditHours < 18) {
+                                $("#btnSave").removeAttr("disabled");
+                                $('.progress-circle-prog').css("stroke", "#f7f250");
+                            }
+                            else if (result.creditHours == 18) {
+                                $('.progress-circle-prog').css("stroke", "green");
+                            }
+                            $('#x' + id + '').hide();
+
+
+                            function progressBar(progressVal, totalPercentageVal = 100) {
+                                var strokeVal = (4.64 * 100) / totalPercentageVal;
+                                var x = document.querySelector('.progress-circle-prog');
+                                x.style.strokeDasharray = progressVal * (strokeVal) + ' 999';
+                                var el = document.querySelector('.progress-text');
+                                var from = $('.progress-text').data('progress');
+                                $('.progress-text').data('progress', progressVal);
+                                var start = new Date().getTime();
+
+                                setTimeout(function () {
+                                    var now = (new Date().getTime()) - start;
+                                    var progress = now / 700;
+                                    el.innerHTML = result.creditHours;
+                                    if (progress < 1) setTimeout(arguments.callee, 10);
+                                }, 10);
+
+                            }
+                            var el = document.querySelector('.progress-text');
+                            el.innerHTML = result.creditHours;
+                            progressBar(result.creditHours, 18);
+                        }
+
+                    })
+                    if (result.canChoise == true) {
+                        $.ajax({
+                            url: "/Student/SlectedSubjects?ID=" + id,
+                            type: "GET",
+                            contentType: "application/json;charset=utf-8",
+                            dataType: "json",
+                            success: function (result) {
+                                var html = '';
+                                var i = 0;
+                                $.each(result, function (key, item) {
+                                    html += '<tr id="slectedSub' + item.id + '">';
+                                    i++;
+                                    html += '<td style="padding-left: 27px;font-weight: 500;font-style:italic;">' + i + '</td>';
+                                    html += '<td style="font-weight: 500;font-style:italic;">' + item.subjectName + '</td>';
+                                    html += '<td style="color:#0094ff"><a href="#" style="text-decoration:none;text-align: center;font-weight: 500;font-style:italic;">' + item.code + '</a></td>';
+                                    html += '<td style="font-weight: 500;font-style:italic;text-align: center;">' + item.professorName + '</td>';
+                                    if (item.preSubject == null)
+                                        html += '<td style="font-weight: 800;font-style:italic;text-align: center;">' + " - " + '</td>';
+                                    else
+                                        html += '<td style="font-weight: 500;font-style:italic;text-align: center;">' + item.preSubjectName + '</td>';
+                                    html += '<td style="font-weight: 500;font-style:italic;text-align: center;">' + item.creditHours + '</td>';
+                                    html += '<td style="font-weight: 500;font-style:italic;text-align: center;">' + item.day + '</td>';
+                                    html += '<td style="font-weight: 500;font-style:italic;text-align: center;">' + item.timeFrom + '</td>';
+                                    html += '<td style="font-weight: 500;font-style:italic;text-align: center;">' + item.timeTo + '</td>';
+                                    html += '<td style="display:none;font-weight: 500;font-style:italic;text-align: center;">' + item.subjectID + '</td>';
+                                    html += '<td style="text-align: center;" ><a href="javascript:void(0);" onclick=Delete(' + item.id + '); return false;>' +
+                                        '<i class="fas fa-times" style="font-size: 20px;color: red;"></i></a></td>';
+                                    html += '</tr>';
+
+                                });
+
+                                $('#tblSlectedSubjects').append(html);
+                            },
+                            complete: function () {
+                                $('.loading').hide();
+                            }
+                        });
+
+                    }
+                    else if (result.IsAvailable == false) {
+                        // alert("Cant This Subject");
+                        $('#alert_SubjectInfo').show();
+                        $('#alert_SubjectInfo').delay(3000).fadeOut('slow');
+                    }
+                    else {
+                        //alert("cant chose more than 18 hours");
+                        $('#alert_SubjectError').show();
+                        $('#alert_SubjectError').delay(3000).fadeOut('slow');
+
+                    }
+                }
+            });
+
+
+        } else if (valid == false) {
+            $('#alert_SubjectInfo').show();
+            $('#alert_SubjectInfo').delay(3000).fadeOut('slow');
+        }
+    } 
+    function Delete(id) {
+        $('#slectedSub' + id + '').remove();
+        $('#x' + id + '').show();
+        $.ajax({
+            url: "/Student/RemoveHours?ID=" + id,
+            type: "GET",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                $.each(result, function (key, item) {
+
+                    if (result.canChoise == false) {
+                        if (result.creditHours <= 12 || result.creditHours > 18) {
+                            $("#btnSave").attr("disabled", "disabled");
+                            $('.progress-circle-prog').css("stroke", "red");
+                        }
+                        else if (result.creditHours > 12 && result.creditHours < 18) {
+                            $("#btnSave").removeAttr("disabled");
+                            $('.progress-circle-prog').css("stroke", "#f7f250");
+                        }
+                        else if (result.creditHours == 18) {
+                            $('.progress-circle-prog').css("stroke", "green");
+                        }
+
+                        function progressBar(progressVal, totalPercentageVal = 100) {
+                            var strokeVal = (4.64 * 100) / totalPercentageVal;
+                            var x = document.querySelector('.progress-circle-prog');
+                            x.style.strokeDasharray = progressVal * (strokeVal) + ' 999';
+                            var el = document.querySelector('.progress-text');
+                            var from = $('.progress-text').data('progress');
+                            $('.progress-text').data('progress', progressVal);
+                            var start = new Date().getTime();
+
+                            setTimeout(function () {
+                                var now = (new Date().getTime()) - start;
+                                var progress = now / 700;
+                                el.innerHTML = result.creditHours;
+                                if (progress < 1) setTimeout(arguments.callee, 10);
+                            }, 10);
+
+                        }
+                        var el = document.querySelector('.progress-text');
+                        el.innerHTML = result.creditHours;
+                        progressBar(result.creditHours, 18);
+                    }
+
+                })
+            }
+        });
+    }
+    function progressBar(progressVal, totalPercentageVal = 100) {
+        var strokeVal = (4.64 * 100) / totalPercentageVal;
+        var x = document.querySelector('.progress-circle-prog');
+        x.style.strokeDasharray = progressVal * (strokeVal) + ' 999';
+        var el = document.querySelector('.progress-text');
+        var from = $('.progress-text').data('progress');
+        $('.progress-text').data('progress', progressVal);
+        var start = new Date().getTime();
+
+        setTimeout(function () {
+            var now = (new Date().getTime()) - start;
+            var progress = now / 700;
+            el.innerHTML = 0;
+            if (progress < 1) setTimeout(arguments.callee, 10);
+        }, 10);
+
+    }
+
+
+</script>

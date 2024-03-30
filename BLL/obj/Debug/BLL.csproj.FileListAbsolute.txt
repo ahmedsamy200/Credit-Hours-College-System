@@ -1,0 +1,12 @@
+F:\Projects\CollegeSystem\BLL\bin\Debug\BLL.dll.config
+F:\Projects\CollegeSystem\BLL\bin\Debug\BLL.dll
+F:\Projects\CollegeSystem\BLL\bin\Debug\BLL.pdb
+F:\Projects\CollegeSystem\BLL\bin\Debug\EntityFramework.dll
+F:\Projects\CollegeSystem\BLL\bin\Debug\EntityFramework.SqlServer.dll
+F:\Projects\CollegeSystem\BLL\bin\Debug\EntityFramework.xml
+F:\Projects\CollegeSystem\BLL\bin\Debug\EntityFramework.SqlServer.xml
+F:\Projects\CollegeSystem\BLL\obj\Debug\BLL.csproj.CoreCompileInputs.cache
+F:\Projects\CollegeSystem\BLL\obj\Debug\BLL.dll
+F:\Projects\CollegeSystem\BLL\obj\Debug\BLL.pdb
+F:\Projects\CollegeSystem\BLL\obj\Debug\BLL.csproj.AssemblyReference.cache
+F:\Projects\CollegeSystem\BLL\obj\Debug\BLL.csproj.CopyComplete

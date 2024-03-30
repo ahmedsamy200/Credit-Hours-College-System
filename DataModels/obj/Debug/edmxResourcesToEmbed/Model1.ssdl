@@ -1,0 +1,283 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="UniversityModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Department">
+    <Key>
+      <PropertyRef Name="depID" />
+    </Key>
+    <Property Name="depID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="deptName" Type="nvarchar(max)" />
+    <Property Name="isActive" Type="bit" />
+    <Property Name="head" Type="int" />
+  </EntityType>
+  <EntityType Name="Gender">
+    <Key>
+      <PropertyRef Name="genderID" />
+    </Key>
+    <Property Name="genderID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="gender" Type="nvarchar" MaxLength="10" />
+    <Property Name="isActive" Type="bit" />
+  </EntityType>
+  <EntityType Name="Level">
+    <Key>
+      <PropertyRef Name="levelID" />
+    </Key>
+    <Property Name="levelID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="levelName" Type="nvarchar(max)" />
+    <Property Name="isActive" Type="bit" />
+  </EntityType>
+  <EntityType Name="Professors">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="name" Type="nvarchar(max)" />
+    <Property Name="image" Type="nvarchar(max)" />
+    <Property Name="isActive" Type="bit" />
+    <Property Name="genderID" Type="int" />
+  </EntityType>
+  <EntityType Name="ProfessorSubjects">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="professorID" Type="int" />
+    <Property Name="subjectID" Type="int" />
+  </EntityType>
+  <EntityType Name="Student">
+    <Key>
+      <PropertyRef Name="studentID" />
+    </Key>
+    <Property Name="studentID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="nationalID" Type="decimal" Precision="14" Scale="0" />
+    <Property Name="password" Type="nvarchar(max)" />
+    <Property Name="firstName" Type="nvarchar" MaxLength="50" />
+    <Property Name="midName" Type="nvarchar" MaxLength="50" />
+    <Property Name="lastName" Type="nvarchar" MaxLength="50" />
+    <Property Name="deptId" Type="int" />
+    <Property Name="image" Type="nvarchar(max)" />
+    <Property Name="mobile" Type="nvarchar" MaxLength="13" />
+    <Property Name="genderID" Type="int" />
+    <Property Name="levelID" Type="int" />
+    <Property Name="isActive" Type="bit" />
+  </EntityType>
+  <EntityType Name="StudentSubjects">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="studentID" Type="int" />
+    <Property Name="subjectID" Type="int" />
+    <Property Name="isPassed" Type="bit" />
+  </EntityType>
+  <EntityType Name="Subject">
+    <Key>
+      <PropertyRef Name="subID" />
+    </Key>
+    <Property Name="subID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="subjectName" Type="nvarchar(max)" />
+    <Property Name="deptID" Type="int" />
+    <Property Name="code" Type="nvarchar" MaxLength="10" />
+    <Property Name="creditHours" Type="float" />
+    <Property Name="preSubject" Type="int" />
+    <Property Name="day" Type="nvarchar" MaxLength="10" />
+    <Property Name="timeFrom" Type="time" Precision="7" />
+    <Property Name="timeTo" Type="time" Precision="7" />
+  </EntityType>
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="principal_id" Type="int" Nullable="false" />
+    <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="version" Type="int" />
+    <Property Name="definition" Type="varbinary(max)" />
+  </EntityType>
+  <Association Name="FK_Department_Professors">
+    <End Role="Professors" Type="Self.Professors" Multiplicity="0..1" />
+    <End Role="Department" Type="Self.Department" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Professors">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="Department">
+        <PropertyRef Name="head" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Professors_Gender">
+    <End Role="Gender" Type="Self.Gender" Multiplicity="0..1" />
+    <End Role="Professors" Type="Self.Professors" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Gender">
+        <PropertyRef Name="genderID" />
+      </Principal>
+      <Dependent Role="Professors">
+        <PropertyRef Name="genderID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ProfessorSubjects_Professors">
+    <End Role="Professors" Type="Self.Professors" Multiplicity="0..1" />
+    <End Role="ProfessorSubjects" Type="Self.ProfessorSubjects" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Professors">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="ProfessorSubjects">
+        <PropertyRef Name="professorID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ProfessorSubjects_Subject">
+    <End Role="Subject" Type="Self.Subject" Multiplicity="0..1" />
+    <End Role="ProfessorSubjects" Type="Self.ProfessorSubjects" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Subject">
+        <PropertyRef Name="subID" />
+      </Principal>
+      <Dependent Role="ProfessorSubjects">
+        <PropertyRef Name="subjectID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Student_Department">
+    <End Role="Department" Type="Self.Department" Multiplicity="0..1" />
+    <End Role="Student" Type="Self.Student" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Department">
+        <PropertyRef Name="depID" />
+      </Principal>
+      <Dependent Role="Student">
+        <PropertyRef Name="deptId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Student_Gender">
+    <End Role="Gender" Type="Self.Gender" Multiplicity="0..1" />
+    <End Role="Student" Type="Self.Student" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Gender">
+        <PropertyRef Name="genderID" />
+      </Principal>
+      <Dependent Role="Student">
+        <PropertyRef Name="genderID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Student_Level">
+    <End Role="Level" Type="Self.Level" Multiplicity="0..1" />
+    <End Role="Student" Type="Self.Student" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Level">
+        <PropertyRef Name="levelID" />
+      </Principal>
+      <Dependent Role="Student">
+        <PropertyRef Name="levelID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_StudentSubjects_Student">
+    <End Role="Student" Type="Self.Student" Multiplicity="0..1" />
+    <End Role="StudentSubjects" Type="Self.StudentSubjects" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Student">
+        <PropertyRef Name="studentID" />
+      </Principal>
+      <Dependent Role="StudentSubjects">
+        <PropertyRef Name="studentID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_StudentSubjects_Subject">
+    <End Role="Subject" Type="Self.Subject" Multiplicity="0..1" />
+    <End Role="StudentSubjects" Type="Self.StudentSubjects" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Subject">
+        <PropertyRef Name="subID" />
+      </Principal>
+      <Dependent Role="StudentSubjects">
+        <PropertyRef Name="subjectID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Subject_Department">
+    <End Role="Department" Type="Self.Department" Multiplicity="0..1" />
+    <End Role="Subject" Type="Self.Subject" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Department">
+        <PropertyRef Name="depID" />
+      </Principal>
+      <Dependent Role="Subject">
+        <PropertyRef Name="deptID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Subject_Subject">
+    <End Role="Subject" Type="Self.Subject" Multiplicity="0..1" />
+    <End Role="Subject1" Type="Self.Subject" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Subject">
+        <PropertyRef Name="subID" />
+      </Principal>
+      <Dependent Role="Subject1">
+        <PropertyRef Name="preSubject" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="UniversityModelStoreContainer">
+    <EntitySet Name="Department" EntityType="Self.Department" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Gender" EntityType="Self.Gender" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Level" EntityType="Self.Level" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Professors" EntityType="Self.Professors" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="ProfessorSubjects" EntityType="Self.ProfessorSubjects" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Student" EntityType="Self.Student" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="StudentSubjects" EntityType="Self.StudentSubjects" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Subject" EntityType="Self.Subject" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_Department_Professors" Association="Self.FK_Department_Professors">
+      <End Role="Professors" EntitySet="Professors" />
+      <End Role="Department" EntitySet="Department" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Professors_Gender" Association="Self.FK_Professors_Gender">
+      <End Role="Gender" EntitySet="Gender" />
+      <End Role="Professors" EntitySet="Professors" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ProfessorSubjects_Professors" Association="Self.FK_ProfessorSubjects_Professors">
+      <End Role="Professors" EntitySet="Professors" />
+      <End Role="ProfessorSubjects" EntitySet="ProfessorSubjects" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ProfessorSubjects_Subject" Association="Self.FK_ProfessorSubjects_Subject">
+      <End Role="Subject" EntitySet="Subject" />
+      <End Role="ProfessorSubjects" EntitySet="ProfessorSubjects" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Student_Department" Association="Self.FK_Student_Department">
+      <End Role="Department" EntitySet="Department" />
+      <End Role="Student" EntitySet="Student" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Student_Gender" Association="Self.FK_Student_Gender">
+      <End Role="Gender" EntitySet="Gender" />
+      <End Role="Student" EntitySet="Student" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Student_Level" Association="Self.FK_Student_Level">
+      <End Role="Level" EntitySet="Level" />
+      <End Role="Student" EntitySet="Student" />
+    </AssociationSet>
+    <AssociationSet Name="FK_StudentSubjects_Student" Association="Self.FK_StudentSubjects_Student">
+      <End Role="Student" EntitySet="Student" />
+      <End Role="StudentSubjects" EntitySet="StudentSubjects" />
+    </AssociationSet>
+    <AssociationSet Name="FK_StudentSubjects_Subject" Association="Self.FK_StudentSubjects_Subject">
+      <End Role="Subject" EntitySet="Subject" />
+      <End Role="StudentSubjects" EntitySet="StudentSubjects" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Subject_Department" Association="Self.FK_Subject_Department">
+      <End Role="Department" EntitySet="Department" />
+      <End Role="Subject" EntitySet="Subject" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Subject_Subject" Association="Self.FK_Subject_Subject">
+      <End Role="Subject" EntitySet="Subject" />
+      <End Role="Subject1" EntitySet="Subject" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

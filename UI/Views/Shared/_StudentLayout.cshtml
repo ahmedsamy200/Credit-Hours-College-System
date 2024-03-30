@@ -1,0 +1,72 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap-grid.css" rel="stylesheet" />  
+    <link href="~/StyleSheets/StdLayout.css" rel="stylesheet" />
+    <script src="~/StyleSheets/StdLayout.js"></script>
+    <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+    <script src="~/Scripts/jquery-3.5.1.js"></script>
+    <script src="~/Scripts/bootstrap.js"></script>
+   
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/notify.min.js"></script>
+</head>
+<body>
+    <div class="header">
+        <div id="rightSection">
+            <img class="img-responsive img-rounded UserImage user" style="height:37px;width:41px;cursor: pointer;border-radius: 50%;border: #b8bfce solid 2px;" src=""
+                 alt="User picture">
+            <span id="FName" style="color:#fff;margin-right: 33px;font-family: cursive;font-style: italic;font-weight: 700;padding-left:8px"></span>
+        </div>
+    </div>
+    <nav class="menu">
+        <header>Menu <span>×</span></header>
+        <ol>
+            <li class="menu-item"><a href="#0">Home</a></li>
+            <li class="menu-item"><a href="#0">All Subjects</a></li>
+            <li class="menu-item"><a href="#0">My Subjects</a></li>
+            <li class="menu-item">
+                <a href="#0">Professors </a>
+            </li>
+            <li class="menu-item">
+                <a href="#0">Departments</a>
+
+            </li>
+            <li class="menu-item"><a href="#0">Report</a></li>
+            <li class="menu-item"><a href="#0">Log out</a></li>
+        </ol>
+        <footer><button aria-label="Toggle Menu">Toggle</button></footer>
+    </nav> 
+    <div class="container body-content" style="height:100vh;margin-top:40px;display: inline-block;position: absolute;margin-top: 107px;">
+        @RenderBody()
+
+    </div>
+
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>
+
+<script>
+    $('#sec_Card').hide();
+    $('#thd-Section').hide();
+    
+    $('#alert_SubjectSaved').hide();
+    $('#alert_SubjectInfo').hide();
+    $('#alert_SubjectError').hide();
+    //window.setTimeout(function () {
+    //    $(".alert").fadeTo(500, 0).slideUp(500, function () {
+    //        $(this).remove();
+    //    });
+    //}, 2000);
+</script>

@@ -1,0 +1,12 @@
+F:\Projects\CollegeSystem\DataModels\bin\Debug\DataModels.dll.config
+F:\Projects\CollegeSystem\DataModels\bin\Debug\DataModels.dll
+F:\Projects\CollegeSystem\DataModels\bin\Debug\DataModels.pdb
+F:\Projects\CollegeSystem\DataModels\bin\Debug\EntityFramework.dll
+F:\Projects\CollegeSystem\DataModels\bin\Debug\EntityFramework.SqlServer.dll
+F:\Projects\CollegeSystem\DataModels\bin\Debug\EntityFramework.xml
+F:\Projects\CollegeSystem\DataModels\bin\Debug\EntityFramework.SqlServer.xml
+F:\Projects\CollegeSystem\DataModels\obj\Debug\DataModels.csproj.CoreCompileInputs.cache
+F:\Projects\CollegeSystem\DataModels\obj\Debug\DataModels.dll
+F:\Projects\CollegeSystem\DataModels\obj\Debug\DataModels.pdb
+F:\Projects\CollegeSystem\DataModels\obj\Debug\DataModels.csproj.AssemblyReference.cache
+F:\Projects\CollegeSystem\DataModels\obj\Debug\DataModels.csproj.CopyComplete
