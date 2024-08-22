@@ -8,43 +8,37 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title</title>
+    <link rel="icon" type="image/x-icon" href="https://s3-us-west-2.amazonaws.com/s.cdpn.io/169963/hat.svg">
+
     <link href="~/Content/bootstrap.css" rel="stylesheet" />
-    <link href="~/Content/bootstrap-grid.css" rel="stylesheet" />  
+    <link href="~/Content/bootstrap-grid.css" rel="stylesheet" />
     <link href="~/StyleSheets/StdLayout.css" rel="stylesheet" />
     <script src="~/StyleSheets/StdLayout.js"></script>
     <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
     <script src="~/Scripts/jquery-3.5.1.js"></script>
     <script src="~/Scripts/bootstrap.js"></script>
-   
+
     <script src="~/Scripts/jquery.validate.js"></script>
-    <script src="~/notify.min.js"></script>
 </head>
 <body>
     <div class="header">
-        <div id="rightSection">
-            <img class="img-responsive img-rounded UserImage user" style="height:37px;width:41px;cursor: pointer;border-radius: 50%;border: #b8bfce solid 2px;" src=""
-                 alt="User picture">
-            <span id="FName" style="color:#fff;margin-right: 33px;font-family: cursive;font-style: italic;font-weight: 700;padding-left:8px"></span>
+        <div id="rightSection" style="margin-top:15px">
+            <a href="/Login/LoginPage" style="color:#fff;margin-right: 10px;padding-left:8px">Log Out</a>
+        </div>
+        <div id="leftSection" style="margin-top:15px">
+            <a href="/Student/AddSubjects" style="color:#fff;margin-right: 15px;padding-left:30px">All Subjects</a>
+            <a href="/Student/MySubjects" style="color:#fff;margin-right: 33px;padding-left:8px">My Subjects</a>
         </div>
     </div>
-    <nav class="menu">
+    <nav class="menu d-none d-lg-inline-block" style="margin-top:110px">
         <header>Menu <span>×</span></header>
         <ol>
-            <li class="menu-item"><a href="#0">Home</a></li>
-            <li class="menu-item"><a href="#0">All Subjects</a></li>
-            <li class="menu-item"><a href="#0">My Subjects</a></li>
-            <li class="menu-item">
-                <a href="#0">Professors </a>
-            </li>
-            <li class="menu-item">
-                <a href="#0">Departments</a>
-
-            </li>
-            <li class="menu-item"><a href="#0">Report</a></li>
-            <li class="menu-item"><a href="#0">Log out</a></li>
+            <li class="menu-item"><a href="/Student/AddSubjects">All Subjects</a></li>
+            <li class="menu-item"><a href="/Student/MySubjects">My Subjects</a></li>
+            <li class="menu-item"><a href="/Login/LoginPage">Log out</a></li>
         </ol>
         <footer><button aria-label="Toggle Menu">Toggle</button></footer>
-    </nav> 
+    </nav>
     <div class="container body-content" style="height:100vh;margin-top:40px;display: inline-block;position: absolute;margin-top: 107px;">
         @RenderBody()
 
@@ -56,11 +50,12 @@
     @RenderSection("scripts", required: false)
 </body>
 </html>
+<script src="~/notify.min.js"></script>
 
 <script>
     $('#sec_Card').hide();
     $('#thd-Section').hide();
-    
+
     $('#alert_SubjectSaved').hide();
     $('#alert_SubjectInfo').hide();
     $('#alert_SubjectError').hide();

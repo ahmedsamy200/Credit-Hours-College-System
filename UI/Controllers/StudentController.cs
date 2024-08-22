@@ -12,37 +12,51 @@ namespace UI.Controllers
 {
     public class StudentController : Controller
     {
-        StudentRepository std = new StudentRepository();
-        SubjectRepository repo = new SubjectRepository();
+        StudentRepository stdRepo = new StudentRepository();
+        SubjectRepository subRepo = new SubjectRepository();
         UniversityEntities db = new UniversityEntities();
-        StdSubjectRepository stdrepo = new StdSubjectRepository();
-        ProfessorSubjectRepository Profrepo = new ProfessorSubjectRepository();
+        StdSubjectRepository stdSubRepo = new StdSubjectRepository();
+        ProfessorSubjectRepository ProfRepo = new ProfessorSubjectRepository();
 
-        public ActionResult My_Account()
+        public ActionResult AddSubjects()
         {
+            if (Session["UserID"] == null)
+                return RedirectToAction("LoginPage", "Login");
+            return View();
+        } 
+        public ActionResult MySubjects()
+        {
+            if (Session["UserID"] == null)
+                    return RedirectToAction("LoginPage", "Login");
             return View();
         }
         public JsonResult GetUserData()
         {
 
-            StudentVM us = std.GetByID((int)Session["UserID"]);
+            StudentVM us = stdRepo.GetByID((int)Session["UserID"]);
 
             //get the sum of std creditHours from db
-            IEnumerable<StdSubjectVM> stdsub = stdrepo.GetAll();
+            IEnumerable<StdSubjectVM> stdsub = stdSubRepo.GetAll();
             Session["all_creditHours"] = stdsub.Where(x => x.studentID == (int)Session["UserID"]).Select(x => x.credithours).Sum();
             return Json(us, JsonRequestBehavior.AllowGet);
 
         }
         public JsonResult GetDptSubjects()
         {          
-            IEnumerable<ProfessorSubjectVM> sub = Profrepo.GetDptSubjects((int)Session["dptID"]);
+            IEnumerable<ProfessorSubjectVM> sub = ProfRepo.GetDptSubjects((int)Session["dptID"]);
+            return Json(sub.OrderBy(x => x.subjectName).ToList(), JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult GetStudntSubjects()
+        {
+            IEnumerable<StdSubjectVM> sub = stdSubRepo.GetStdSubjects((int)Session["UserID"]);
             return Json(sub.OrderBy(x => x.subjectName).ToList(), JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult CountHours(SubjectVM s, int StdID, int id)
         {
-            SubjectVM sub = repo.CountHours(id);
-            if (repo.CheckIfAvailable(s, StdID))
+            SubjectVM sub = subRepo.CountHours(id);
+            if (subRepo.CheckIfAvailable(s, StdID))
             {
                 sub.IsAvailable = true;
                 sub.canChoise = true;
@@ -70,7 +84,7 @@ namespace UI.Controllers
         }
         public JsonResult RemoveHours(int ID)
         {
-            SubjectVM sub = repo.CountHours(ID);
+            SubjectVM sub = subRepo.CountHours(ID);
             Session["hours"] = (double)sub.creditHours;
             double x = Convert.ToDouble(Session["all_creditHours"]);
 
@@ -87,7 +101,7 @@ namespace UI.Controllers
         public JsonResult SlectedSubjects(int ID)
         {
 
-            IEnumerable<ProfessorSubjectVM> sub = Profrepo.Slected(ID);
+            IEnumerable<ProfessorSubjectVM> sub = ProfRepo.Slected(ID);
             return Json(sub, JsonRequestBehavior.AllowGet);
         }
         public JsonResult SaveSubjects(List<StudentSubject> Subjects)
@@ -107,6 +121,26 @@ namespace UI.Controllers
             int savedSubjects = db.SaveChanges();
             return Json(savedSubjects);
 
+        }
+
+
+        public JsonResult DeleteSubject(int id)
+        {
+            try
+            {
+                int userID = (int)Session["UserID"];
+                var result = stdSubRepo.Delete(id , userID);
+                if (result)
+                {
+                    return Json("success", JsonRequestBehavior.AllowGet);
+                }
+                return Json("failed", JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }

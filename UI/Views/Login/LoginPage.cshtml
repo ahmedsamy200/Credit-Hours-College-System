@@ -9,25 +9,24 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LoginPage</title>
-    <link rel="icon" type="image/x-icon" href="~/Images/clinic2-512.png" />
+    <title>Login</title>
+    <link rel="icon" type="image/x-icon"  href="https://s3-us-west-2.amazonaws.com/s.cdpn.io/169963/hat.svg">
     <link href="~/Content/bootstrap.css" rel="stylesheet" />
     <link href="~/Content/bootstrap-grid.css" rel="stylesheet" />
     <link href="~/StyleSheets/LoginPage.css" rel="stylesheet" />
-   
+
     <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
     <script src="~/Scripts/jquery-3.5.0.js"></script>
     <script src="~/Scripts/bootstrap.js"></script>
 
-    <script src="~/Scripts/jquery.validate.js"></script>
     <script src="~/notify.min.js"></script>
-    
+
 </head>
 <body >
     <div class="container">
 
     </div>
-    <div class="form" style="position: sticky;margin-top: 93px;">
+    <div class="form" style="position: sticky;margin-top: 60px;">
         <div class="thumbnail"><img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/169963/hat.svg" /></div>
         <div class="register-form animate">
             <input type="text" id="txtFName" placeholder="First Name" autocomplete="off"/>
@@ -45,6 +44,11 @@
             <input type="text" id="txtNatID" placeholder="National ID" autocomplete="off"/>
             <input type="password" id="txtPassword" placeholder="password" autocomplete="off"/>
             <button id="btnLogin">login</button>
+            <div style=" margin-top: 13px; text-align: left; font-size: 15px; color: #1a1919ed;">
+                <p>National ID : 123456789</p>
+                <p>Password :    123456789</p>
+            </div>
+
             <p class="message">Not registered? <a >Create an account</a></p>
         </div>
         </div>
@@ -75,7 +79,8 @@
 
                         $.notify("Logged in Successfully!", "success");
                         //window.location = "//localhost:7588/Home/Index";
-                        window.location = "//localhost:7588/Student/My_Account";
+                        //window.location = "//localhost:7588/Student/My_Account";
+                        window.location = "/Student/MySubjects";
                     }
                     else{
 

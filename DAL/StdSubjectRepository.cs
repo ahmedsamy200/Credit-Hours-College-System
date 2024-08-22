@@ -12,7 +12,7 @@ namespace DAL
     {
         bool Add(StudentSubject sub);
         bool Update(StdSubjectVM sub);
-        bool Delete(int id);
+        bool Delete(int id , int StudentID);
         StdSubjectVM GetByID(int id);
         IEnumerable<StdSubjectVM> GetAll();
         IEnumerable<StdSubjectVM> GetStdSubjects(int id);
@@ -44,13 +44,13 @@ namespace DAL
         }
 
 
-        public bool Delete(int id)
+        public bool Delete(int id , int studentID)
         {
             try
             {
                 if (id > 0)
                 {
-                    StudentSubject obj = db.StudentSubjects.FirstOrDefault(x => x.id == id);
+                    StudentSubject obj = db.StudentSubjects.FirstOrDefault(x => x.id == id && x.studentID == studentID);
                     if (obj != null)
                     {
                         db.StudentSubjects.Remove(obj);

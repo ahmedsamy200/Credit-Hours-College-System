@@ -1,0 +1,12 @@
+F:\CompletedProjects\CollegeSystem\CollegeSystem\BLL\bin\Release\BLL.dll.config
+F:\CompletedProjects\CollegeSystem\CollegeSystem\BLL\bin\Release\BLL.dll
+F:\CompletedProjects\CollegeSystem\CollegeSystem\BLL\bin\Release\BLL.pdb
+F:\CompletedProjects\CollegeSystem\CollegeSystem\BLL\bin\Release\EntityFramework.dll
+F:\CompletedProjects\CollegeSystem\CollegeSystem\BLL\bin\Release\EntityFramework.SqlServer.dll
+F:\CompletedProjects\CollegeSystem\CollegeSystem\BLL\bin\Release\EntityFramework.xml
+F:\CompletedProjects\CollegeSystem\CollegeSystem\BLL\bin\Release\EntityFramework.SqlServer.xml
+F:\CompletedProjects\CollegeSystem\CollegeSystem\BLL\obj\Release\BLL.csproj.AssemblyReference.cache
+F:\CompletedProjects\CollegeSystem\CollegeSystem\BLL\obj\Release\BLL.csproj.CoreCompileInputs.cache
+F:\CompletedProjects\CollegeSystem\CollegeSystem\BLL\obj\Release\BLL.csproj.Up2Date
+F:\CompletedProjects\CollegeSystem\CollegeSystem\BLL\obj\Release\BLL.dll
+F:\CompletedProjects\CollegeSystem\CollegeSystem\BLL\obj\Release\BLL.pdb

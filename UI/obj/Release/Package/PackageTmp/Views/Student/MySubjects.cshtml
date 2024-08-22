@@ -1,0 +1,114 @@
+﻿@{
+    ViewBag.Title = "My Subjects";
+    Layout = "~/Views/Shared/_StudentLayout.cshtml";
+}
+<style>
+    table th {
+        text-align: center
+    }
+    #emptyTbl{
+        display:none;
+    }
+</style>
+
+<div class="my-Subjects" style=" width: max-content;">
+    <h2 style="margin-bottom:30px;font-family:sans-serif">My Subjects</h2>
+
+    <div>
+
+        @* Subjects List *@
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">My Subjects</h4>
+            </div>
+            <div class="card-body">
+                <div id="emptyTbl" class="mb-4" style="text-align:center">
+                    <p style="font-weight:600">There are no subjects yet</p>
+                    <a href="/student/AddSubjects" class="btn btn-primary" style="color:white;font-weight:600">Add Subjects!</a>
+                </div>
+                <div id="FirstTable">
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th style="padding-left: 28px;">#</th>
+                                <th>Subject Name</th>
+                                <th>Code</th>
+                                <th style="width:10px">PreSubject</th>
+                                <th>creditHours</th>
+                                <th>Day</th>
+                                <th>From</th>
+                                <th>To</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="mySubjects">                         
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    $(document).ready(function () {
+        LoadStudentSubjects();
+    })
+
+    function LoadStudentSubjects() {
+        $.ajax({
+            url: "/Student/GetStudntSubjects",
+            type: "GET",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                if (result.length == 0) {
+                    $('#emptyTbl').show();
+                }
+                var html = '';
+                var i = 0;
+                $.each(result, function (key, item) {
+                    html += '<tr id="mysubID' + item.id + '">';
+                    i++;
+                    html += '<td style="padding-left: 27px;font-weight: 500;font-style:italic;">' + i + '</td>';
+                    html += '<td style="font-weight: 500;font-style:italic;">' + item.subjectName + '</td>';
+                    html += '<td style="color:#0094ff"><a href="#" style="text-decoration:none;text-align: center;font-weight: 500;font-style:italic;">' + item.code + '</a></td>';
+                    if (item.preSubject == null)
+                        html += '<td style="font-weight: 800;font-style:italic;text-align: center;">' + " - " + '</td>';
+                    else
+                        html += '<td style="font-weight: 500;font-style:italic;text-align: center;">' + item.preSubjectName + '</td>';
+                    html += '<td style="font-weight: 500;font-style:italic;text-align: center;">' + item.credithours + '</td>';
+                    html += '<td style="font-weight: 500;font-style:italic;text-align: center;">' + item.day + '</td>';
+                    html += '<td style="font-weight: 500;font-style:italic;text-align: center;">' + item.timeFrom + '</td>';
+                    html += '<td style="font-weight: 500;font-style:italic;text-align: center;">' + item.timeTo + '</td>';
+                    html += '<td style="display:none;font-weight: 500;font-style:italic;text-align: center;">' + item.subjectID + '</td>';
+                    html += '<td style="text-align: center;" ><a href="javascript:void(0);" onclick=Delete(' + item.id + '); return false;>' +
+                        '<i class="fas fa-times" style="font-size: 20px;color: red;"></i></a></td>';
+                    html += '</tr>';
+                });
+
+                $('#mySubjects').html(html);
+            }
+        });
+    }
+
+
+    function Delete(id) {
+        if (confirm("تاكيد الحذف")) {
+            $.ajax({
+                type: "POST",
+                dataType: false,
+                url: "/Student/DeleteSubject",
+                data: { id: id },
+                success: function (data, xhr, status) {
+                    LoadStudentSubjects();
+                },
+                error: function (e) {
+                    alert(e.responseText);
+                }
+            });
+        }
+   }
+</script>
